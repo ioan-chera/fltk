@@ -90,6 +90,43 @@ typedef struct {
 + (int) addNewItem:(const Fl_Menu_Item*)mitem menu:(NSMenu*)menu action:(SEL)selector;
 @end
 
+//
+// Converts a non-unicode FLTK key equivalent to actual unicode so it works on a macOS system menu.
+//
+static unichar getMacEquivalent(int key)
+{
+  switch(key)
+  {
+    case FL_BackSpace:
+      return NSBackspaceCharacter;
+    case FL_Tab:
+      return NSTabCharacter;
+    case FL_Enter:
+      return NSCarriageReturnCharacter;
+    case FL_Escape:
+      return 0x1b;
+    case FL_Left:
+      return 0x1c;
+    case FL_Right:
+      return 0x1d;
+    case FL_Up:
+      return 0x1e;
+    case FL_Down:
+      return 0x1f;
+    case FL_Delete:
+      return NSDeleteCharacter;
+    case FL_Home:
+      return 0x2196;
+    case FL_Page_Up:
+      return 0x21de;
+    case FL_Page_Down:
+      return 0x21df;
+    case FL_End:
+      return 0x2198;
+  }
+  return key; // by default just forward the key
+}
+
 @implementation FLMenuItem
 - (const Fl_Menu_Item*) getFlItem
 // returns the Fl_Menu_Item corresponding to this system menu item
@@ -168,6 +205,8 @@ typedef struct {
     int fkey_num = (key - FL_F);	// 1,2..
     mac_key = NSF1FunctionKey + fkey_num - 1;
     }
+  else
+    mac_key = getMacEquivalent(key);
   [self setKeyEquivalent:[NSString stringWithCharacters:&mac_key length:1]];
   [self setKeyEquivalentModifierMask:mod];
 }
