@@ -619,8 +619,8 @@ unsigned long ZEXPORT crc32_z(unsigned long crc, const unsigned char FAR *buf,
         }
         word += 3 * Z_BATCH;
         num -= 3 * Z_BATCH;
-        crc = multmodp(Z_BATCH_ZEROS, crc) ^ crc1;
-        crc = multmodp(Z_BATCH_ZEROS, crc) ^ crc2;
+        crc = multmodp(Z_BATCH_ZEROS, (z_crc_t)crc) ^ crc1;
+        crc = multmodp(Z_BATCH_ZEROS, (z_crc_t)crc) ^ crc2;
     }
 
     /* Do one last smaller batch with the remaining words, if there are enough
@@ -641,8 +641,8 @@ unsigned long ZEXPORT crc32_z(unsigned long crc, const unsigned char FAR *buf,
         word += 3 * last;
         num -= 3 * last;
         val = x2nmodp(last, 6);
-        crc = multmodp(val, crc) ^ crc1;
-        crc = multmodp(val, crc) ^ crc2;
+        crc = multmodp(val, (z_crc_t)crc) ^ crc1;
+        crc = multmodp(val, (z_crc_t)crc) ^ crc2;
     }
 
     /* Compute the CRC on any remaining words. */
@@ -1022,7 +1022,7 @@ uLong ZEXPORT crc32_combine64(uLong crc1, uLong crc2, z_off64_t len2) {
 #ifdef DYNAMIC_CRC_TABLE
     once(&made, make_crc_table);
 #endif /* DYNAMIC_CRC_TABLE */
-    return multmodp(x2nmodp(len2, 3), crc1) ^ (crc2 & 0xffffffff);
+    return multmodp(x2nmodp(len2, 3), (z_crc_t)crc1) ^ (crc2 & 0xffffffff);
 }
 
 /* ========================================================================= */
@@ -1045,5 +1045,5 @@ uLong ZEXPORT crc32_combine_gen(z_off_t len2) {
 
 /* ========================================================================= */
 uLong ZEXPORT crc32_combine_op(uLong crc1, uLong crc2, uLong op) {
-    return multmodp(op, crc1) ^ (crc2 & 0xffffffff);
+    return multmodp((z_crc_t)op, (z_crc_t)crc1) ^ (crc2 & 0xffffffff);
 }
