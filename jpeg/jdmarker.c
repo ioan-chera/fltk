@@ -736,8 +736,8 @@ examine_app0 (j_decompress_ptr cinfo, JOCTET FAR * data,
     cinfo->JFIF_major_version = GETJOCTET(data[5]);
     cinfo->JFIF_minor_version = GETJOCTET(data[6]);
     cinfo->density_unit = GETJOCTET(data[7]);
-    cinfo->X_density = (GETJOCTET(data[8]) << 8) + GETJOCTET(data[9]);
-    cinfo->Y_density = (GETJOCTET(data[10]) << 8) + GETJOCTET(data[11]);
+    cinfo->X_density = (UINT16)((GETJOCTET(data[8]) << 8) + GETJOCTET(data[9]));
+    cinfo->Y_density = (UINT16)((GETJOCTET(data[10]) << 8) + GETJOCTET(data[11]));
     /* Check version.
      * Major version must be 1 or 2, anything else signals an incompatible
      * change.

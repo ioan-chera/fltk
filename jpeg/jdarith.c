@@ -415,7 +415,7 @@ decode_mcu_DC_refine (j_decompress_ptr cinfo, JBLOCKARRAY MCU_data)
   }
 
   st = entropy->fixed_bin;	/* use fixed probability estimation */
-  p1 = 1 << cinfo->Al;		/* 1 in the bit position being coded */
+  p1 = (JCOEF)(1 << cinfo->Al);		/* 1 in the bit position being coded */
 
   /* Outer loop handles each block in the MCU */
 
@@ -459,7 +459,7 @@ decode_mcu_AC_refine (j_decompress_ptr cinfo, JBLOCKARRAY MCU_data)
   block = MCU_data[0];
   tbl = cinfo->cur_comp_info[0]->ac_tbl_no;
 
-  p1 = 1 << cinfo->Al;		/* 1 in the bit position being coded */
+  p1 = (JCOEF)(1 << cinfo->Al);		/* 1 in the bit position being coded */
   m1 = -p1;			/* -1 in the bit position being coded */
 
   /* Establish EOBx (previous stage end-of-block) index */

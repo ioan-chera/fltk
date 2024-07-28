@@ -885,7 +885,7 @@ decode_mcu_DC_refine (j_decompress_ptr cinfo, JBLOCKARRAY MCU_data)
   /* Load up working state */
   BITREAD_LOAD_STATE(cinfo, entropy->bitstate);
 
-  p1 = 1 << cinfo->Al;		/* 1 in the bit position being coded */
+  p1 = (JCOEF)(1 << cinfo->Al);		/* 1 in the bit position being coded */
 
   /* Outer loop handles each block in the MCU */
 
@@ -940,7 +940,7 @@ decode_mcu_AC_refine (j_decompress_ptr cinfo, JBLOCKARRAY MCU_data)
   if (! entropy->insufficient_data) {
 
     Se = cinfo->Se;
-    p1 = 1 << cinfo->Al;	/* 1 in the bit position being coded */
+    p1 = (JCOEF)(1 << cinfo->Al);	/* 1 in the bit position being coded */
     m1 = -p1;			/* -1 in the bit position being coded */
     natural_order = cinfo->natural_order;
 
