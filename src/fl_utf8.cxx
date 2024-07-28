@@ -93,7 +93,7 @@ static int Toupper(int ucs) {
     }
     for (i = 0; i < NBC; i++) {
       int l;
-      l = XUtf8Tolower(i);
+      l = XUtf8Tolower(static_cast<int>(i));
       if (l != i) table[l] = (unsigned short) i;
     }
   }

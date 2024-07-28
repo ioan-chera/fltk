@@ -213,7 +213,7 @@ const char* fl_shortcut_label(unsigned int shortcut) {
 */
 
 static char *add_modifier_key(char *p, const char *end, const char *name) {
-  int ln = strlen(name);
+  int ln = static_cast<int>(strlen(name));
   if (p+ln > end) {		// string too long
     if (p+4 <= end) {		// can replace with "..." ?
       strcpy(p,"...");

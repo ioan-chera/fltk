@@ -86,7 +86,7 @@ int fl_filename_list(const char *d, dirent ***list,
   char *dirloc;
 
   // Assume that locale encoding is no less dense than UTF-8
-  dirlen = strlen(d);
+  dirlen = static_cast<int>(strlen(d));
 #ifdef __APPLE__
   dirloc = (char *)d;
 #else
@@ -139,7 +139,7 @@ int fl_filename_list(const char *d, dirent ***list,
   for (i=0; i<n; i++) {
     int newlen;
     dirent *de = (*list)[i];
-    int len = strlen(de->d_name);
+    int len = static_cast<int>(strlen(de->d_name));
 #ifdef __APPLE__
     newlen = len;
 #else

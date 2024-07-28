@@ -109,14 +109,14 @@ typedef struct {
     NSMenu* menu = [self menu];
     NSInteger flRank = [menu indexOfItem:self];
     NSInteger last = [menu numberOfItems] - 1;
-    int from = flRank;
+    int from = static_cast<int>(flRank);
     while(from > 0) {
       if ([[menu itemAtIndex:from-1] isSeparatorItem]) break;
       item = [(FLMenuItem*)[menu itemAtIndex:from-1] getFlItem];
       if ( !(item->flags & FL_MENU_RADIO) ) break;
       from--;
     }
-    int to = flRank;
+    int to = static_cast<int>(flRank);
     while (to < last) {
       if ([[menu itemAtIndex:to+1] isSeparatorItem]) break;
       item = [(FLMenuItem*)[menu itemAtIndex:to+1] getFlItem];
@@ -198,7 +198,7 @@ typedef struct {
   [item setRepresentedObject:pointer];
   [menu addItem:item];
   [item setTarget:item];
-  int retval = [menu indexOfItem:item];
+  int retval = static_cast<int>([menu indexOfItem:item]);
   [item release];
   return retval;
 }
@@ -298,7 +298,7 @@ static void createSubMenu( NSMenu *mh, pFl_Menu_Item &mm,  const Fl_Menu_Item *m
     [submenu setAutoenablesItems:NO];
     
     int cnt;
-    cnt = [mh numberOfItems];
+    cnt = static_cast<int>([mh numberOfItems]);
     cnt--;
     menuItem = [mh itemAtIndex:cnt];
     [menuItem setSubmenu:submenu];
@@ -344,7 +344,7 @@ static void convertToMenuBar(const Fl_Menu_Item *mm)
 {
   NSMenu *fl_system_menu = [NSApp mainMenu];
   int count;//first, delete all existing system menus
-  count = [fl_system_menu numberOfItems];
+  count = static_cast<int>([fl_system_menu numberOfItems]);
   for(int i = count - 1; i > 0; i--) {
     [fl_system_menu removeItem:[fl_system_menu itemAtIndex:i]];
   }

@@ -363,8 +363,8 @@ int Fl_Table::find_cell(TableContext context, int R, int C, int &X, int &Y, int 
     X=Y=W=H=0;
     return(-1);
   }
-  X = col_scroll_position(C) - hscrollbar->value() + tix;
-  Y = row_scroll_position(R) - vscrollbar->value() + tiy;
+  X = static_cast<int>(col_scroll_position(C) - hscrollbar->value() + tix);
+  Y = static_cast<int>(row_scroll_position(R) - vscrollbar->value() + tiy);
   W = col_width(C);
   H = row_height(R);
   
@@ -553,8 +553,8 @@ void Fl_Table::table_scrolled() {
 //    Makes no assumptions about any pre-initialized data.
 //
 void Fl_Table::table_resized() {
-  table_h = row_scroll_position(rows());
-  table_w = col_scroll_position(cols()); 
+  table_h = static_cast<int>(row_scroll_position(rows()));
+  table_w = static_cast<int>(col_scroll_position(cols())); 
   recalc_dimensions(); 
   // Recalc scrollbar sizes
   //    Clamp scrollbar value() after a resize.

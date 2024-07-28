@@ -106,8 +106,8 @@ Fl_RGB_Image* Fl_Image_Surface::image()
   int W = width, H = height;
 #ifdef __APPLE__
   CGContextFlush(offscreen);
-  W = CGBitmapContextGetWidth(offscreen);
-  H = CGBitmapContextGetHeight(offscreen);
+  W = static_cast<int>(CGBitmapContextGetWidth(offscreen));
+  H = static_cast<int>(CGBitmapContextGetHeight(offscreen));
   Fl_X::set_high_resolution(0);
   data = fl_read_image(NULL, 0, 0, W, H, 0);
   fl_gc = 0;

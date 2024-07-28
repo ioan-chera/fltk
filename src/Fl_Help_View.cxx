@@ -2713,7 +2713,7 @@ Fl_Help_View::get_color(const char *n,	// I - Color name
 
   if (n[0] == '#') {
     // Do hex color lookup
-    rgb = strtol(n + 1, NULL, 16);
+    rgb = static_cast<int>(strtol(n + 1, NULL, 16));
 
     if (strlen(n) > 4) {
       r = rgb >> 16;
@@ -3686,7 +3686,7 @@ quote_char(const char *p) {	// I - Quoted string
 
   if (!strchr(p, ';')) return -1;
   if (*p == '#') {
-    if (*(p+1) == 'x' || *(p+1) == 'X') return strtol(p+2, NULL, 16);
+    if (*(p+1) == 'x' || *(p+1) == 'X') return static_cast<int>(strtol(p+2, NULL, 16));
     else return atoi(p+1);
   }
   for (i = (int)(sizeof(names) / sizeof(names[0])), nameptr = names; i > 0; i --, nameptr ++)

@@ -35,10 +35,10 @@ fl_read_image(uchar *p,		// I - Pixel buffer or NULL to allocate
     CGContextRef src = (CGContextRef)fl_gc;   // get bitmap context
     base = (uchar *)CGBitmapContextGetData(src);  // get data
     if(!base) return NULL;
-    int sw = CGBitmapContextGetWidth(src);
-    int sh = CGBitmapContextGetHeight(src);
-    rowBytes = CGBitmapContextGetBytesPerRow(src);
-    delta = CGBitmapContextGetBitsPerPixel(src)/8;
+    int sw = static_cast<int>(CGBitmapContextGetWidth(src));
+    int sh = static_cast<int>(CGBitmapContextGetHeight(src));
+    rowBytes = static_cast<int>(CGBitmapContextGetBytesPerRow(src));
+    delta = static_cast<int>(CGBitmapContextGetBitsPerPixel(src)/8);
     if( (sw - x < w) || (sh - y < h) )  return NULL;
     }
   else { // reading from current window

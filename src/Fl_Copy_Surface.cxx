@@ -245,7 +245,7 @@ void Fl_Copy_Surface::draw_decorated_window(Fl_Window* win, int delta_x, int del
         CGContextScaleCTM(auxgc, 1, -1);
         Fl_X::draw_layer_to_context(layer, auxgc, win->w(), bt);
         Fl_RGB_Image *image = new Fl_RGB_Image((const uchar*)CGBitmapContextGetData(auxgc), win->w(), bt, 4,
-                                               CGBitmapContextGetBytesPerRow(auxgc)); // 10.2
+                                               static_cast<int>(CGBitmapContextGetBytesPerRow(auxgc))); // 10.2
         image->draw(0, 0);
         delete image;
         CGContextRelease(auxgc);

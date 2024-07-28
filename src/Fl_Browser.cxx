@@ -389,7 +389,7 @@ int Fl_Browser::item_height(void *item) const {
 	case 'B':
 	case 'C': while (isdigit(*str & 255)) str++; break; // skip a color number
 	case 'F': font = (Fl_Font)strtol(str,&str,10); break;
-	case 'S': tsize = strtol(str,&str,10); break;
+	case 'S': tsize = (int)strtol(str,&str,10); break;
 	case 0: case '@': str--;
 	case '.': goto END_FORMAT;
 	}
@@ -451,7 +451,7 @@ int Fl_Browser::item_width(void *item) const {
     case 'B':
     case 'C': while (isdigit(*str & 255)) str++; break; // skip a color number
     case 'F': font = (Fl_Font)strtol(str, &str, 10); break;
-    case 'S': tsize = strtol(str, &str, 10); break;
+    case 'S': tsize = (int)strtol(str, &str, 10); break;
     case '.':
       done = 1;
       break;
@@ -559,7 +559,7 @@ void Fl_Browser::item_draw(void* item, int X, int Y, int W, int H) const {
 	lcol = FL_INACTIVE_COLOR;
 	break;
       case 'S':
-	tsize = strtol(str, &str, 10);
+	tsize = (int)strtol(str, &str, 10);
 	break;
       case '-':
 	fl_color(FL_DARK3);

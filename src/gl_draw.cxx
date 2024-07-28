@@ -239,7 +239,7 @@ void gl_draw(const char* str, int n, float x, float y) {
  \see On the Mac OS X platform, see gl_texture_pile_height(int)
   */
 void gl_draw(const char* str) {
-  gl_draw(str, strlen(str));
+  gl_draw(str, static_cast<int>(strlen(str)));
 }
 
 /**
@@ -247,7 +247,7 @@ void gl_draw(const char* str) {
  \see On the Mac OS X platform, see gl_texture_pile_height(int)
   */
 void gl_draw(const char* str, int x, int y) {
-  gl_draw(str, strlen(str), x, y);
+  gl_draw(str, static_cast<int>(strlen(str)), x, y);
 }
 
 /**
@@ -255,7 +255,7 @@ void gl_draw(const char* str, int x, int y) {
  \see On the Mac OS X platform, see gl_texture_pile_height(int)
   */
 void gl_draw(const char* str, float x, float y) {
-  gl_draw(str, strlen(str), x, y);
+  gl_draw(str, static_cast<int>(strlen(str)), x, y);
 }
 
 static void gl_draw_invert(const char* str, int n, int x, int y) {

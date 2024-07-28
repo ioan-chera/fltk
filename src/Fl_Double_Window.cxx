@@ -302,8 +302,8 @@ static void bmProviderRelease (void *src, const void *data, size_t size) {
 void Fl_Quartz_Graphics_Driver::copy_offscreen(int x,int y,int w,int h,Fl_Offscreen osrc,int srcx,int srcy) {
   CGContextRef src = (CGContextRef)osrc;
   void *data = CGBitmapContextGetData(src);
-  int sw = CGBitmapContextGetWidth(src);
-  int sh = CGBitmapContextGetHeight(src);
+  int sw = static_cast<int>(CGBitmapContextGetWidth(src));
+  int sh = static_cast<int>(CGBitmapContextGetHeight(src));
   CGImageAlphaInfo alpha = CGBitmapContextGetAlphaInfo(src);
   CGColorSpaceRef lut = CGColorSpaceCreateDeviceRGB();
   // when output goes to a Quartz printercontext, release of the bitmap must be

@@ -128,7 +128,7 @@ void Fl_Graphics_Driver::line_style(int style, int width, char* dashes) {
 	CGFloat *p = pattern;
     while (*d) { *p++ = (float)*d++; }
     fl_quartz_line_pattern = pattern;
-    fl_quartz_line_pattern_size = d-dashes;
+    fl_quartz_line_pattern_size = static_cast<int>(d-dashes);
   } else if (style & 0xff) {
     char dash, dot, gap;
     // adjust lengths to account for cap:
@@ -147,7 +147,7 @@ void Fl_Graphics_Driver::line_style(int style, int width, char* dashes) {
     case FL_DASHDOT:    *p++ = dash; *p++ = gap; *p++ = dot; *p++ = gap; break;
     case FL_DASHDOTDOT: *p++ = dash; *p++ = gap; *p++ = dot; *p++ = gap; *p++ = dot; *p++ = gap; break;
     }
-    fl_quartz_line_pattern_size = p-pattern;
+    fl_quartz_line_pattern_size = static_cast<int>(p-pattern);
     fl_quartz_line_pattern = pattern;
   } else {
     fl_quartz_line_pattern = 0; 

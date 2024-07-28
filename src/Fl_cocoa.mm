@@ -179,7 +179,7 @@ static unsigned int mods_to_e_state( NSUInteger mods )
   if ( mods & NSControlKeyMask ) state |= FL_CTRL;
   if ( mods & NSShiftKeyMask ) state |= FL_SHIFT;
   if ( mods & NSAlphaShiftKeyMask ) state |= FL_CAPS_LOCK;
-  unsigned int ret = ( Fl::e_state & 0xff000000 ) | state;
+  unsigned int ret = static_cast<unsigned>(( Fl::e_state & 0xff000000 ) | state);
   Fl::e_state = ret;
   //printf( "State 0x%08x (%04x)\n", Fl::e_state, mods );
   return ret;
@@ -2199,7 +2199,7 @@ Fl_Window *fl_dnd_target_window = 0;
 static void  q_set_window_title(NSWindow *nsw, const char * name, const char *mininame) {
   CFStringRef title = CFStringCreateWithCString(NULL, (name ? name : ""), kCFStringEncodingUTF8);
   if(!title) { // fallback when name contains malformed UTF-8
-    int l = strlen(name);
+    int l = static_cast<int>(strlen(name));
     unsigned short* utf16 = new unsigned short[l + 1];
     l = fl_utf8toUtf16(name, l, utf16, l + 1);
     title = CFStringCreateWithCharacters(NULL, utf16, l);
@@ -2610,7 +2610,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   static UInt32 prevMods = 0;
   NSUInteger mods = [theEvent modifierFlags];
   Fl_Window *window = (Fl_Window*)[(FLWindow*)[theEvent window] getFl_Window];
-  UInt32 tMods = prevMods ^ mods;
+  UInt32 tMods = static_cast<UInt32>(prevMods ^ mods);
   int sendEvent = 0;
   if ( tMods )
   {
@@ -2621,7 +2621,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
       sendEvent = ( prevMods<mods ) ? FL_KEYBOARD : FL_KEYUP;
     Fl::e_length = 0;
     Fl::e_text = (char*)"";
-    prevMods = mods;
+    prevMods = static_cast<UInt32>(mods);
   }
   mods_to_e_state( mods );
   if (sendEvent) Fl::handle(sendEvent,window);
@@ -2673,7 +2673,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   if ( [[pboard types] containsObject:NSFilenamesPboardType] ) {
     CFArrayRef files = (CFArrayRef)[pboard propertyListForType:NSFilenamesPboardType];
     CFStringRef all = CFStringCreateByCombiningStrings(NULL, files, CFSTR("\n"));
-    int l = CFStringGetMaximumSizeForEncoding(CFStringGetLength(all), kCFStringEncodingUTF8);
+    int l = static_cast<int>(CFStringGetMaximumSizeForEncoding(CFStringGetLength(all), kCFStringEncodingUTF8));
     DragData = (char *)malloc(l + 1);
     CFStringGetCString(all, DragData, l + 1, kCFStringEncodingUTF8);
     CFRelease(all);
@@ -2691,7 +2691,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
     return NO;
   }
   Fl::e_text = DragData;
-  Fl::e_length = strlen(DragData);
+  Fl::e_length = static_cast<int>(strlen(DragData));
   int old_event = Fl::e_number;
   Fl::belowmouse()->handle(Fl::e_number = FL_PASTE);
   Fl::e_number = old_event;
@@ -2722,7 +2722,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   static char *received_utf8 = NULL;
   static int lreceived = 0;
   char *p = (char*)[aString UTF8String];
-  int l = strlen(p);
+  int l = static_cast<int>(strlen(p));
   if (l > 0) {
     if (lreceived == 0) {
       received_utf8 = (char*)malloc(l + 1);
@@ -2840,7 +2840,7 @@ static FLTextInputContext* fltextinputcontext_instance = nil;
   }
   if (in_key_event && Fl::e_length) [FLView concatEtext:received];
   else [FLView prepareEtext:received];
-  Fl_X::next_marked_length = strlen([received UTF8String]);
+  Fl_X::next_marked_length = static_cast<int>(strlen([received UTF8String]));
   if (!in_key_event) Fl::handle( FL_KEYBOARD, target);
   else need_handle = YES;
   selectedRange = NSMakeRange(100, newSelection.length);
@@ -3833,7 +3833,7 @@ static int get_plain_text_from_clipboard(int clipboard)
 	len = strlen(aux_c) + 1;
       }
       else len = [data length] + 1;
-      resize_selection_buffer(len, clipboard);
+      resize_selection_buffer(static_cast<int>(len), clipboard);
       if (![found isEqualToString:UTF8_pasteboard_type]) {
         strcpy(fl_selection_buffer[clipboard], aux_c);
         free(aux_c);
@@ -3846,7 +3846,7 @@ static int get_plain_text_from_clipboard(int clipboard)
       Fl::e_clipboard_type = Fl::clipboard_plain_text;
     }
   }    
-  return length;
+  return static_cast<int>(length);
 }
 
 static Fl_Image* get_image_from_clipboard(Fl_Widget *receiver)
@@ -3875,10 +3875,10 @@ static Fl_Image* get_image_from_clipboard(Fl_Widget *receiver)
     bitmap = pdf_to_nsbitmapimagerep(data);
   }
   if (!bitmap) return NULL;
-  int bytesPerPixel([bitmap bitsPerPixel]/8);
-  int bpr([bitmap bytesPerRow]);
-  int hh([bitmap pixelsHigh]);
-  int ww([bitmap pixelsWide]);
+  int bytesPerPixel(static_cast<int>([bitmap bitsPerPixel]/8));
+  int bpr(static_cast<int>([bitmap bytesPerRow]));
+  int hh(static_cast<int>([bitmap pixelsHigh]));
+  int ww(static_cast<int>([bitmap pixelsWide]));
   uchar *imagedata = new uchar[bpr * hh];
   memcpy(imagedata, [bitmap bitmapData], bpr * hh);
   Fl_RGB_Image *image = new Fl_RGB_Image(imagedata, ww, hh, bytesPerPixel, (bpr == ww * bytesPerPixel ? 0 : bpr) );
@@ -4278,13 +4278,13 @@ void Fl_X::set_key_window()
 static NSImage *imageFromText(const char *text, int *pwidth, int *pheight)
 {
   const char *p, *q;
-  int width = 0, height, w2, ltext = strlen(text);
+  int width = 0, height, w2, ltext = static_cast<int>(strlen(text));
   fl_font(FL_HELVETICA, 10);
   p = text;
   int nl = 0;
   while(nl < 100 && (q=strchr(p, '\n')) != NULL) { 
     nl++; 
-    w2 = int(fl_width(p, q - p));
+    w2 = int(fl_width(p, static_cast<int>(q - p)));
     if (w2 > width) width = w2;
     p = q + 1; 
   }
@@ -4306,7 +4306,7 @@ static NSImage *imageFromText(const char *text, int *pwidth, int *pheight)
   while(TRUE) {
     q = strchr(p, '\n');
     if (q) {
-      fl_draw(p, q - p, 3, y);
+      fl_draw(p, static_cast<int>(q - p), 3, y);
     } else {
       fl_draw(p, 3, y);
       break;
@@ -4420,8 +4420,8 @@ int Fl_X::dnd(int use_selection)
 // rescales an NSBitmapImageRep
 static NSBitmapImageRep *scale_nsbitmapimagerep(NSBitmapImageRep *img, float scale)
 {
-  int w = [img pixelsWide];
-  int h = [img pixelsHigh];
+  int w = static_cast<int>([img pixelsWide]);
+  int h = static_cast<int>([img pixelsHigh]);
   long int scaled_w = lround(scale * w);
   long int scaled_h = lround(scale * h);
   NSBitmapImageRep *scaled = [[NSBitmapImageRep alloc]  initWithBitmapDataPlanes:NULL
@@ -4472,8 +4472,8 @@ static void write_bitmap_inside(NSBitmapImageRep *to, int to_width, NSBitmapImag
 #endif
   int to_w = (int)[to pixelsWide]; // pixel width of "to"
   int from_w = (int)[from pixelsWide]; // pixel width of "from"
-  int from_h = [from pixelsHigh]; // pixel height of "from"
-  int to_depth = [to samplesPerPixel], from_depth = [from samplesPerPixel];
+  int from_h = static_cast<int>([from pixelsHigh]); // pixel height of "from"
+  int to_depth = static_cast<int>([to samplesPerPixel]), from_depth = static_cast<int>([from samplesPerPixel]);
   int depth = 0;
   if (to_depth > from_depth) depth = from_depth;
   else if (from_depth > to_depth) depth = to_depth;
@@ -4635,7 +4635,7 @@ unsigned char *Fl_X::bitmap_from_window_rect(Fl_Window *win, int x, int y, int w
 {
   NSBitmapImageRep *bitmap = rect_to_NSBitmapImageRep(win, x, y, w, h);
   if (bitmap == nil) return NULL;
-  *bytesPerPixel = [bitmap bitsPerPixel]/8;
+  *bytesPerPixel = static_cast<int>([bitmap bitsPerPixel]/8);
   int bpp = (int)[bitmap bytesPerPlane];
   int bpr = (int)[bitmap bytesPerRow];
   int hh = bpp/bpr; // sometimes hh = h-1 for unclear reason, and hh = 2*h with retina
@@ -4826,7 +4826,7 @@ void Fl_Paged_Device::print_window(Fl_Window *win, int x_offset, int y_offset)
       CGContextClearRect(gc, CGRectMake(0, 0, win->w(), bt));
       Fl_X::draw_layer_to_context(layer, gc, win->w(), bt);
       Fl_RGB_Image *image = new Fl_RGB_Image((const uchar*)CGBitmapContextGetData(gc), win->w(), bt, 4,
-                                             CGBitmapContextGetBytesPerRow(gc)); // 10.2
+                                             static_cast<int>(CGBitmapContextGetBytesPerRow(gc))); // 10.2
       image->draw(x_offset, y_offset); // draw title bar to PostScript
       delete image;
       CGContextRelease(gc);
@@ -4921,9 +4921,9 @@ int Fl_X::calc_mac_os_version() {
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_10
   if ([NSProcessInfo instancesRespondToSelector:@selector(operatingSystemVersion)]) {
     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    M = version.majorVersion;
-    m = version.minorVersion;
-    b = version.patchVersion;
+    M = static_cast<int>(version.majorVersion);
+    m = static_cast<int>(version.minorVersion);
+    b = static_cast<int>(version.patchVersion);
   }
   else
 #endif

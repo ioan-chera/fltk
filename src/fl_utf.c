@@ -818,10 +818,10 @@ unsigned fl_utf8to_mb(const char* src, unsigned srclen,
       fl_utf8towc(src, srclen, buf, length+1);
     }
     if (dstlen) {
-      ret = wcstombs(dst, buf, dstlen);
-      if (ret >= (int)dstlen-1) ret = wcstombs(0,buf,0);
+      ret = (int)wcstombs(dst, buf, dstlen);
+      if (ret >= (int)dstlen-1) ret = (int)wcstombs(0,buf,0);
     } else {
-      ret = wcstombs(0,buf,0);
+      ret = (int)wcstombs(0,buf,0);
     }
     if (buf != lbuf) free((void*)buf);
     if (ret >= 0) return (unsigned)ret;
@@ -878,9 +878,9 @@ unsigned fl_utf8from_mb(char* dst, unsigned dstlen,
     wchar_t* buf = lbuf;
     int length;
     unsigned ret;
-    length = mbstowcs(buf, src, 1024);
+    length = (int)mbstowcs(buf, src, 1024);
     if (length >= 1024) {
-      length = mbstowcs(0, src, 0)+1;
+      length = (int)mbstowcs(0, src, 0)+1;
       buf = (wchar_t*)(malloc(length*sizeof(wchar_t)));
       mbstowcs(buf, src, length);
     }
