@@ -27,6 +27,7 @@
 #include <FL/Fl_Menu_.H>
 #include <FL/fl_draw.H>
 #include <stdio.h>
+#include <assert.h>
 #include "flstring.h"
 
 /** Size of the menu starting from this menu item.
@@ -1063,6 +1064,11 @@ const Fl_Menu_Item* Fl_Menu_Item::pulldown(
     pp.p[pp.menu_number]->autoscroll(pp.item_number);
 
   STARTUP:
+    assert(pp.current_item);
+    // This should not happen when jumping to STARTUP - indicates a design bug
+    if (!pp.current_item) {
+      break;
+    }
     menuwindow& cw = *pp.p[pp.menu_number];
     const Fl_Menu_Item* m = pp.current_item;
     if (!m->activevisible()) { // pointing at inactive item
