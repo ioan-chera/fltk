@@ -1067,6 +1067,10 @@ const Fl_Menu_Item* Fl_Menu_Item::pulldown(
     pp.p[pp.menu_number]->autoscroll(pp.item_number);
 
   STARTUP:
+    if (pp.menu_number < 0 || pp.menu_number >= pp.nummenus) {
+      initial_item = 0; // turn off startup code
+      continue;
+    }
     menuwindow& cw = *pp.p[pp.menu_number];
     const Fl_Menu_Item* m = pp.current_item;
     if (!m || !m->activevisible()) { // pointing at inactive item
